@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
-import {getCurrentCoordinates} from "@/src/features/location/services/locationService";
+import {getCurrentCoordinates, LocationPermissionError} from "@/src/features/location/services/locationService";
 import {MapRegion} from "@/src/features/map/models/MapRegion";
+import {Coordinates} from "@/src/features/map/models/Coordinates";
+
 
 const DEFAULT_REGION: MapRegion = {
     latitude: -8.047562,
@@ -10,14 +12,23 @@ const DEFAULT_REGION: MapRegion = {
 };
 
 export function useMainMapViewModel(){
+    
     const [region, setRegion] = useState<MapRegion>(DEFAULT_REGION);
+
+    const[userCoordinates, setUserCoordinates]= useState<Coordinates|null>(null);
+
     const [isLoading, setIsLoading] = useState(true);
     const[locationError, setLocationError] = useState<string|null>(null);
 
     useEffect(()=>{
         async function loadLocation(){
+            setIsLoading(true);
+            setLocationError(null);
+            
             try {
                 const coordinates = await getCurrentCoordinates();
+                setUserCoordinates(coordinates);
+
                 setRegion({
                     latitude: coordinates.latitude,
                     longitude: coordinates.longitude,
@@ -25,7 +36,11 @@ export function useMainMapViewModel(){
                     longitudeDelta: 0.01,
                 });
             }catch(error){
-                setLocationError("error");
+                if(error instanceof LocationPermissionError) {
+                    setLocationError("A permissao da localizacao nao foi concedida");
+                }else {
+                    setLocationError("Nao foi possivel obter sua localizacao");
+                }
             }finally{
                 setIsLoading(false);
             }
@@ -35,6 +50,7 @@ export function useMainMapViewModel(){
     },[]);
     return {
         region,
+        userCoordinates,
         isLoading,
         locationError,
     };
