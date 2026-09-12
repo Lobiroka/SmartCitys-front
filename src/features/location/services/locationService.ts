@@ -9,24 +9,6 @@ export class LocationPermissionError extends Error {
     }
 }
 
-export async function getCurrentCoordinates(){
-
-    const permission =
-
-        await Location.requestForegroundPermissionsAsync();
-
-    if(permission.status !== 'granted'){
-        throw new LocationPermissionError(permission.canAskAgain);
-    }
-
-    const currentLocation = await Location.getCurrentPositionAsync({});
-
-    return{
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-    };
-}
-
 export async function watchCoordinates(
     onUpdate: (coordinates: {
         latitude: number;
