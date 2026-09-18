@@ -1,6 +1,7 @@
 type KeycloakConfig = {
     issuer: string;
     clientId: string;
+    redirectScheme: string;
 };
 
 function requireEnvironmentValue(
@@ -17,6 +18,7 @@ function requireEnvironmentValue(
 }
 
 export const keycloakConfig: KeycloakConfig = {
+    redirectScheme: 'wb',
     issuer: requireEnvironmentValue(
         process.env.EXPO_PUBLIC_KEYCLOAK_ISSUER,
         'EXPO_PUBLIC_KEYCLOAK_ISSUER',

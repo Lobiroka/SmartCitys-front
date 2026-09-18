@@ -15,12 +15,43 @@ export function useAuthSessionViewModel(
     });
 
     useEffect(() => {
-        service.restoreSession().then(setSession);
+        let isActive = true;
+
+        service
+            .restoreSession()
+            .then((restoredSession) => {
+                if (isActive) {
+                    setSession(restoredSession);
+                }
+            })
+            .catch(() => {
+                if (isActive) {
+                    setSession({
+                        status: 'error',
+                        message: 'Não foi possível restaurar a sessão.',
+                    });
+                }
+            });
+
+        return () => {
+            isActive = false;
+        };
     }, [service]);
 
     async function signIn() {
-        const authenticatedSession = await service.signIn();
-        setSession(authenticatedSession);
+        setSession({ status: 'loading' });
+
+        try {
+            const authenticatedSession =
+                await service.signIn();
+
+            setSession(authenticatedSession);
+        } catch {
+            setSession({
+                status: 'error',
+                message: 'Não foi possível realizar o login.',
+            });
+        }
     }
 
     async function signOut() {

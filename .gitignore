@@ -44,3 +44,8 @@ AGENTS.md
 # generated native folders
 /ios
 /android
+/docs
+
+# generated native folders for mobile workspace
+/apps/mobile/android
+/apps/mobile/ios

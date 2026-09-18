@@ -1,6 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation';
-import { Stack } from 'expo-router';
+import { RootNavigator } from
+      '@/src/navigation/RootNavigator';
 import { StatusBar } from 'expo-status-bar';
+import { AuthSessionProvider } from
+        '@/src/features/auth/contexts/AuthSessionProvider';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -13,12 +16,13 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <AuthSessionProvider>
+        <ThemeProvider
+            value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+        >
+          <RootNavigator />
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </AuthSessionProvider>
   );
 }
