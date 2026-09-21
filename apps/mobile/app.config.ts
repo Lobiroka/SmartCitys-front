@@ -4,8 +4,8 @@ import type {
 } from 'expo/config';
 
 export default function defineExpoConfig({
-                                             config,
-                                         }: ConfigContext): ExpoConfig {
+    config,
+}: ConfigContext): ExpoConfig {
     const googleMapsApiKey =
         process.env.GOOGLE_MAPS_ANDROID_API_KEY;
 
@@ -17,6 +17,8 @@ export default function defineExpoConfig({
 
     return {
         ...config,
+        name: config.name ?? 'wb',
+        slug: config.slug ?? 'wb',
         android: {
             ...config.android,
             config: {

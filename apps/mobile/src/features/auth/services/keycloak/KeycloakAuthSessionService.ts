@@ -1,5 +1,7 @@
 import {
     fetchDiscoveryAsync,
+    revokeAsync,
+    TokenTypeHint,
     type DiscoveryDocument,
 } from 'expo-auth-session';
 
@@ -19,15 +21,40 @@ import { requestKeycloakTokens } from
         '@/src/features/auth/services/keycloak/requestKeycloakTokens';
 import type { AuthTokenStorage } from
         '@/src/features/auth/storage/AuthTokenStorage';
+import type { AccessTokenProvider } from
+        '@/src/features/auth/services/AccessTokenProvider';
 
 export class KeycloakAuthSessionService
-    implements AuthSessionService
+    implements AuthSessionService, AccessTokenProvider
 {
     private discovery?: DiscoveryDocument;
 
     constructor(
         private readonly storage: AuthTokenStorage,
     ) {}
+
+    async getValidAccessToken(): Promise<string> {
+        const storedTokens = await this.storage.load();
+
+        if (!storedTokens) {
+            throw new Error('Não existe uma sessão autenticada.');
+        }
+
+        if (isAccessTokenFresh(storedTokens)) {
+            return storedTokens.accessToken;
+        }
+
+        const discovery = await this.getDiscovery();
+
+        const refreshedTokens = await refreshStoredTokens(
+            storedTokens,
+            keycloakConfig.clientId,
+            discovery,
+            this.storage,
+        );
+
+        return refreshedTokens.accessToken;
+    }
 
     async restoreSession(): Promise<AuthSession> {
         const storedTokens = await this.storage.load();
@@ -75,7 +102,28 @@ export class KeycloakAuthSessionService
     }
 
     async signOut(): Promise<void> {
-        await this.storage.clear();
+        const storedTokens = await this.storage.load();
+
+        try {
+            if (storedTokens) {
+                const discovery = await this.getDiscovery();
+
+                if (discovery.revocationEndpoint) {
+                    await revokeAsync(
+                        {
+                            clientId: keycloakConfig.clientId,
+                            token: storedTokens.refreshToken,
+                            tokenTypeHint: TokenTypeHint.RefreshToken,
+                        },
+                        discovery,
+                    );
+                }
+            }
+        } catch {
+            // A indisponibilidade do provedor não deve impedir o logout local.
+        } finally {
+            await this.storage.clear();
+        }
     }
 
     private async getDiscovery(): Promise<DiscoveryDocument> {

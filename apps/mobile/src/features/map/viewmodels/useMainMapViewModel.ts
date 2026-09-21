@@ -2,7 +2,6 @@ import {useCallback, useState,useRef} from "react";
 import { useFocusEffect } from "expo-router";
 import {watchCoordinates, LocationPermissionError} from "@/src/features/location/services/locationService";
 import {MapRegion} from "@/src/features/map/models/MapRegion";
-import {Coordinates} from "@/src/features/map/models/Coordinates";
 
 import { AppState } from 'react-native';
 
@@ -17,7 +16,6 @@ const DEFAULT_REGION: MapRegion = {
 export function useMainMapViewModel(){
     
     const [region, setRegion] = useState<MapRegion>(DEFAULT_REGION);
-    const[userCoordinates, setUserCoordinates]= useState<Coordinates|null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const[locationError, setLocationError] = useState<string|null>(null);
     const [isPermissionBlocked, setIsPermissionBlocked] = useState(false);
@@ -45,8 +43,6 @@ export function useMainMapViewModel(){
                     if (requestId !== locationRequestIdRef.current) {
                         return;
                     }
-
-                    setUserCoordinates(coordinates);
 
                     setRegion({
                         latitude: coordinates.latitude,
