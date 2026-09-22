@@ -8,6 +8,16 @@ export const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    sessionBox: {
+        position: 'absolute',
+        top: 48,
+        right: 16,
+        maxWidth: 220,
+        padding: 12,
+        gap: 8,
+        borderRadius: 8,
+        alignItems: 'flex-end',
+    },
     messageBox: {
         position: 'absolute',
         top: 48,

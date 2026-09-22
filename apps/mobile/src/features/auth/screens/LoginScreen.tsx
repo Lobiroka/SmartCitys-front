@@ -2,9 +2,11 @@ import {
     ActivityIndicator,
     Button,
     StyleSheet,
-    Text,
-    View,
 } from 'react-native';
+import { ThemedText } from
+        '@/components/themed-text';
+import { ThemedView } from
+        '@/components/themed-view';
 
 import { useAuthSession } from
         '@/src/features/auth/hooks/useAuthSession';
@@ -15,12 +17,12 @@ export function LoginScreen() {
     const isLoading = session.status === 'loading';
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Smart City</Text>
+        <ThemedView style={styles.container}>
+            <ThemedText style={styles.title}>Smart City</ThemedText>
 
-            <Text style={styles.description}>
+            <ThemedText style={styles.description}>
                 Entre para registrar e acompanhar denúncias.
-            </Text>
+            </ThemedText>
 
             {isLoading ? (
                 <ActivityIndicator />
@@ -32,11 +34,11 @@ export function LoginScreen() {
             )}
 
             {session.status === 'error' && (
-                <Text style={styles.error}>
+                <ThemedText style={styles.error}>
                     {session.message}
-                </Text>
+                </ThemedText>
             )}
-        </View>
+        </ThemedView>
     );
 }
 

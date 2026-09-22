@@ -1,11 +1,16 @@
 import { Text, View, Button,Linking,Alert } from 'react-native';
 import MapView from 'react-native-maps';
 
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { useAuthSession } from
+    '@/src/features/auth/hooks/useAuthSession';
 import { useMainMapViewModel } from '../viewmodels/useMainMapViewModel';
 import {styles} from "@/src/features/map/styles/MainMapScreen.styles";
 
 export function MainMapScreen() {
     const { region, isLoading, locationError,loadLocation,isPermissionBlocked } = useMainMapViewModel();
+    const { session, signOut } = useAuthSession();
 
     async function handleOpenSettings() {
         try {
@@ -25,6 +30,21 @@ export function MainMapScreen() {
                      showsUserLocation>
 
             </MapView>
+
+            {session.status === 'authenticated' && (
+                <ThemedView style={styles.sessionBox}>
+                    <ThemedText numberOfLines={1}>
+                        {session.user.name ??
+                            session.user.email ??
+                            'Conta conectada'}
+                    </ThemedText>
+
+                    <Button
+                        title="Sair"
+                        onPress={signOut}
+                    />
+                </ThemedView>
+            )}
 
             {isLoading && (
                 <View style={styles.messageBox}>
