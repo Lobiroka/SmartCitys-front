@@ -28,6 +28,7 @@ export function LoginScreen() {
                 <ActivityIndicator />
             ) : (
                 <Button
+                    testID="login-button"
                     title="Entrar"
                     onPress={signIn}
                 />

@@ -5,10 +5,21 @@
     "apps/*",
     "packages/*"
   ],
+  "overrides": {
+    "react": "19.2.3",
+    "react-test-renderer": "19.2.3"
+  },
   "scripts": {
     "mobile": "npm run start --workspace @smart-city/mobile",
     "mobile:android": "npm run android --workspace @smart-city/mobile",
     "mobile:ios": "npm run ios --workspace @smart-city/mobile",
-    "mobile:lint": "npm run lint --workspace @smart-city/mobile"
+    "mobile:lint": "npm run lint --workspace @smart-city/mobile",
+    "mobile:test": "npm run test --workspace @smart-city/mobile",
+    "mobile:test:coverage": "npm run test:coverage --workspace @smart-city/mobile",
+    "mobile:test:e2e": "npm run test:e2e --workspace @smart-city/mobile"
+  },
+  "devDependencies": {
+    "react": "19.2.3",
+    "react-test-renderer": "19.2.3"
   }
 }

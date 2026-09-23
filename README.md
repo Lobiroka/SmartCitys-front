@@ -224,7 +224,34 @@ A versão iOS ainda precisa de validação e da configuração do provedor de ma
 
 ```bash
 npm run mobile:lint
+npm run mobile:test
+npm run mobile:test:coverage
 ```
+
+### Testes automatizados
+
+A suíte mobile respeita as fronteiras do MVVM:
+
+- testes unitários validam mapeadores e ViewModels com serviços injetados;
+- testes de componentes validam a ligação entre View e ViewModel;
+- o fluxo Maestro valida autenticação, formulário, GPS, backend e listagem em
+  um aparelho ou emulador real.
+
+Os testes Jest não acessam Keycloak, câmera, GPS, banco ou API reais:
+
+```bash
+npm run mobile:test
+```
+
+Para gerar o relatório de cobertura em `apps/mobile/coverage`:
+
+```bash
+npm run mobile:test:coverage
+```
+
+O teste E2E necessita de credenciais exclusivas de teste e cria uma ocorrência
+real no ambiente configurado. As instruções completas estão em
+`.maestro/README.md`.
 
 ## Serviços externos
 
@@ -254,7 +281,10 @@ O APK contém apenas o frontend. Para que as ocorrências funcionem fora da rede
 - [ ] Refinar os componentes visuais, incluindo o botão de logout.
 - [ ] Validar todo o fluxo em Android físico e emulador.
 - [ ] Compilar e validar o fluxo no iOS.
-- [ ] Criar testes dos ViewModels e serviços principais.
+- [x] Criar testes unitários dos ViewModels e mapeadores principais.
+- [x] Criar testes de componentes das telas principais.
+- [x] Preparar fluxo E2E do MVP com Maestro.
+- [ ] Executar o fluxo Maestro em Android com serviços externos disponíveis.
 - [ ] Preparar build de distribuição do MVP.
 - [ ] Publicar o backend em HTTPS para testes externos.
 - [ ] Revisar segredos e configurações de produção antes da publicação.
