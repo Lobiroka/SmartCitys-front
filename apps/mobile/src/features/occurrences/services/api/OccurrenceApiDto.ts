@@ -22,9 +22,23 @@ export type OccurrenceApiDto = {
     prioridade: OccurrencePriority;
     data_registro: string;
     endereco: string;
+    latitude?: number | string | null;
+    longitude?: number | string | null;
     email_solicitante: string | null;
     cidadao_id: number;
     imagens: OccurrenceImageApiDto[];
+};
+
+export type SaveOccurrenceApiDto = {
+    titulo: string;
+    categoria: OccurrenceCategory;
+    regiao: OccurrenceRegion;
+    descricao: string;
+    endereco: string;
+    prioridade: OccurrencePriority;
+    latitude: number;
+    longitude: number;
+    imagens?: string[];
 };
 
 export type OccurrencePageApiDto = {

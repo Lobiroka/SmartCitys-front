@@ -26,9 +26,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: 'Ocorrências',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
+      />
+      <Tabs.Screen
+        name="create-occurrence"
+        options={{ href: null, headerShown: true, title: 'Nova ocorrência' }}
+      />
+      <Tabs.Screen
+        name="edit-occurrence"
+        options={{ href: null, headerShown: true, title: 'Editar ocorrência' }}
       />
     </Tabs>
   );

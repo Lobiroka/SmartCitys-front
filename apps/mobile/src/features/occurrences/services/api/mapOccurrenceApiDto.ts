@@ -16,6 +16,8 @@ export function mapOccurrenceApiDto(
         priority: dto.prioridade,
         createdAt: dto.data_registro,
         address: dto.endereco,
+        latitude: toCoordinate(dto.latitude),
+        longitude: toCoordinate(dto.longitude),
         requesterEmail: dto.email_solicitante,
         images: dto.imagens.map((image) => ({
             id: image.id_imagem,
@@ -23,4 +25,15 @@ export function mapOccurrenceApiDto(
             uploadedAt: image.data_upload,
         })),
     };
+}
+
+function toCoordinate(
+    value: number | string | null | undefined,
+): number | null {
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    const coordinate = Number(value);
+    return Number.isFinite(coordinate) ? coordinate : null;
 }

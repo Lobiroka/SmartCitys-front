@@ -43,7 +43,20 @@
       "expo-image",
       "expo-status-bar",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permita que o Smart City use a câmera para fotografar a ocorrência.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Permita que o Smart City use sua localização para registrar e exibir ocorrências próximas."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

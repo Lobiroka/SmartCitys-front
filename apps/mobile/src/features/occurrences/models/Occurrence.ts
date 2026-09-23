@@ -41,6 +41,20 @@ export type Occurrence = {
     priority: OccurrencePriority;
     createdAt: string;
     address: string;
+    latitude: number | null;
+    longitude: number | null;
     requesterEmail?: string | null;
     images: OccurrenceImage[];
+};
+
+export type SaveOccurrenceInput = {
+    title: string;
+    category: OccurrenceCategory;
+    region: OccurrenceRegion;
+    description: string;
+    address: string;
+    priority: OccurrencePriority;
+    latitude: number;
+    longitude: number;
+    images?: string[];
 };

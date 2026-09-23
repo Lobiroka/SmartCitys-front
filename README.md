@@ -2,7 +2,7 @@
 
 Aplicativo mobile para registro e acompanhamento de ocorrências urbanas. O projeto utiliza React Native com Expo, autenticação pelo Keycloak e arquitetura MVVM.
 
-> Status: MVP mobile em desenvolvimento. Atualmente, autenticação, sessão, mapa, GPS e logout estão funcionais. A integração visual do CRUD de ocorrências ainda será implementada.
+> Status: MVP mobile funcional em Android. Autenticação, sessão, mapa, GPS, câmera e CRUD de ocorrências estão integrados. Ainda faltam validação manual completa, refinamento visual, testes e validação no iOS.
 
 ## Plataformas
 
@@ -128,6 +128,7 @@ smart-city/
 | Expo Auth Session | 57.0.12 | Fluxo OAuth/OIDC com PKCE |
 | Expo SecureStore | 57.0.4 | Armazenamento seguro dos tokens |
 | Expo Location | 57.0.19 | Permissão e acompanhamento do GPS |
+| Expo Camera | 57.0.5 | Captura de fotos das ocorrências |
 | React Native Maps | 1.27.2 | Exibição do mapa nativo |
 | Expo Dev Client | 57.0.19 | Build de desenvolvimento com módulos nativos |
 | React Navigation | 7.x | Navegação utilizada pelo Expo Router |
@@ -238,17 +239,17 @@ O APK contém apenas o frontend. Para que as ocorrências funcionem fora da rede
 
 ## O que falta para o MVP
 
-- [ ] Criar o ViewModel da listagem de ocorrências.
-- [ ] Criar a tela de listagem com `FlatList` ou `SectionList`.
-- [ ] Integrar a listagem ao endpoint autenticado do backend.
-- [ ] Exibir ocorrências no mapa.
-- [ ] Implementar criação de ocorrência.
-- [ ] Capturar foto com Expo Camera durante a criação.
-- [ ] Enviar localização e dados da nova ocorrência ao backend.
-- [ ] Implementar pesquisa e filtros.
-- [ ] Implementar atualização de ocorrência.
-- [ ] Implementar remoção de ocorrência com confirmação.
-- [ ] Tratar estados vazios, carregamento e erros das telas de ocorrências.
+- [x] Criar o ViewModel da listagem de ocorrências.
+- [x] Criar a tela de listagem com `FlatList`.
+- [x] Integrar a listagem ao endpoint autenticado do backend.
+- [x] Exibir ocorrências com coordenadas no mapa.
+- [x] Implementar criação de ocorrência.
+- [x] Capturar foto com Expo Camera durante a criação.
+- [x] Enviar localização e dados da nova ocorrência ao backend.
+- [x] Implementar pesquisa e filtros locais.
+- [x] Implementar atualização de ocorrência aberta.
+- [x] Implementar remoção de ocorrência aberta com confirmação.
+- [x] Tratar estados vazios, carregamento e erros das telas de ocorrências.
 - [ ] Refinar a tela inicial de login e a apresentação do aplicativo.
 - [ ] Refinar os componentes visuais, incluindo o botão de logout.
 - [ ] Validar todo o fluxo em Android físico e emulador.
@@ -264,13 +265,13 @@ O APK contém apenas o frontend. Para que as ocorrências funcionem fora da rede
 |---|---|
 | React Native com Expo para Android e iOS | Em desenvolvimento; Android validado e iOS pendente |
 | Arquitetura MVVM ou MVC | MVVM adotado |
-| Integração com backend | Infraestrutura preparada; telas de ocorrências pendentes |
+| Integração com backend | Implementada no fluxo de ocorrências |
 | Navegação com Expo Router | Implementado |
 | Estado com hooks nativos | Implementado |
 | GPS com Expo Location | Implementado |
-| Câmera com Expo Camera | Pendente |
-| CRUD de ocorrências | Pendente |
-| Listagem com FlatList ou SectionList | Pendente |
+| Câmera com Expo Camera | Implementado |
+| CRUD de ocorrências | Implementado para ocorrências abertas |
+| Listagem com FlatList ou SectionList | Implementado com FlatList |
 
 ## Observações de segurança
 
@@ -284,4 +285,4 @@ O APK contém apenas o frontend. Para que as ocorrências funcionem fora da rede
 
 ## Estado atual da integração com o backend
 
-O cliente HTTP autenticado, os modelos de ocorrência e o método `listMine` já existem. Entretanto, como ainda não há ViewModel nem tela consumindo esse serviço, o fluxo visível atual utiliza Keycloak, Google Maps, GPS e armazenamento local, mas não consulta as ocorrências no backend.
+O cliente HTTP autenticado atende listagem própria, feed do mapa, detalhes, criação, atualização e remoção. O backend armazena coordenadas opcionais e restringe edição e exclusão às ocorrências abertas pertencentes ao cidadão autenticado. Fotografias são enviadas como base64 no MVP; antes de produção, devem migrar para armazenamento de objetos e o banco deve guardar apenas a URL do arquivo.

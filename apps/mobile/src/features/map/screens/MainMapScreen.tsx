@@ -1,5 +1,5 @@
 import { Text, View, Button,Linking,Alert } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -7,10 +7,18 @@ import { useAuthSession } from
     '@/src/features/auth/hooks/useAuthSession';
 import { useMainMapViewModel } from '../viewmodels/useMainMapViewModel';
 import {styles} from "@/src/features/map/styles/MainMapScreen.styles";
+import { useOccurrenceFeedViewModel } from
+    '@/src/features/occurrences/viewmodels/useOccurrenceFeedViewModel';
+import {
+    occurrenceCategories,
+    occurrenceLabel,
+    occurrenceStatuses,
+} from '@/src/features/occurrences/models/occurrenceOptions';
 
 export function MainMapScreen() {
     const { region, isLoading, locationError,loadLocation,isPermissionBlocked } = useMainMapViewModel();
     const { session, signOut } = useAuthSession();
+    const { occurrences, occurrenceError } = useOccurrenceFeedViewModel();
 
     async function handleOpenSettings() {
         try {
@@ -25,10 +33,32 @@ export function MainMapScreen() {
 
     return (
         <View style={styles.container}>
-            <MapView style={styles.map}
-                     region={region}
-                     showsUserLocation>
+            <MapView style={styles.map} region={region} showsUserLocation>
+                {occurrences.map((occurrence) => {
+                    if (occurrence.latitude === null || occurrence.longitude === null) {
+                        return null;
+                    }
 
+                    return (
+                        <Marker
+                            key={occurrence.id}
+                            coordinate={{
+                                latitude: occurrence.latitude,
+                                longitude: occurrence.longitude,
+                            }}
+                            title={occurrence.title}
+                            description={occurrence.address}>
+                            <Callout>
+                                <View style={styles.callout}>
+                                    <Text style={styles.calloutTitle}>{occurrence.title}</Text>
+                                    <Text>{occurrenceLabel(occurrenceCategories, occurrence.category)}</Text>
+                                    <Text>{occurrenceLabel(occurrenceStatuses, occurrence.status)}</Text>
+                                    <Text>{occurrence.address}</Text>
+                                </View>
+                            </Callout>
+                        </Marker>
+                    );
+                })}
             </MapView>
 
             {session.status === 'authenticated' && (
@@ -66,6 +96,12 @@ export function MainMapScreen() {
                             }
                             disabled={isLoading}
                     />
+                </View>
+            )}
+
+            {occurrenceError && !locationError && (
+                <View style={styles.occurrenceErrorBox}>
+                    <Text>{occurrenceError}</Text>
                 </View>
             )}
         </View>

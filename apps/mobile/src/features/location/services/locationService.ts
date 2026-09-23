@@ -37,3 +37,24 @@ export async function watchCoordinates(
         onError
     );
 }
+
+export async function getCurrentCoordinates(): Promise<{
+    latitude: number;
+    longitude: number;
+}> {
+    const permission =
+        await Location.requestForegroundPermissionsAsync();
+
+    if (permission.status !== 'granted') {
+        throw new LocationPermissionError(permission.canAskAgain);
+    }
+
+    const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+    });
+
+    return {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+    };
+}
